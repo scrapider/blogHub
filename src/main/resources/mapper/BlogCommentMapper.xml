@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.BlogCommentMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.BlogComment">
+        <id column="id" property="id"/>
+        <result column="blog_id" property="blogId"/>
+        <result column="user_id" property="userId"/>
+        <result column="header" property="header"/>
+        <result column="nickname" property="nickname"/>
+        <result column="content" property="content"/>
+        <result column="created_time" property="createdTime"/>
+    </resultMap>
+    <insert id="save">
+        insert into bl_blog_comment(blog_id, user_id, header, nickname, content)
+        VALUES (#{blogId}, #{userId}, #{header}, #{nickname}, #{content})
+    </insert>
+    <select id="getByBlogId" resultMap="BaseResultMap">
+        select id, blog_id, user_id, header, nickname, content, created_time
+        from bl_blog_comment
+        where blog_id = #{blogId}
+        order by created_time desc
+    </select>
+    <select id="getByPage" resultMap="BaseResultMap">
+        select id,
+               blog_id,
+               content
+        from bl_blog_comment
+        where user_id = #{userId}
+        order by created_time desc
+        limit #{page.index}, #{page.pageSize}
+    </select>
+    <select id="getCountByPage" resultType="java.lang.Integer">
+        select count(*)
+        from bl_blog_comment
+        where user_id = #{userId}
+    </select>
+
+
+</mapper>

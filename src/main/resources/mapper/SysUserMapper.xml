@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.SysUserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.SysUser">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="header" property="header"/>
+        <result column="signature" property="signature"/>
+        <result column="comment" property="comment"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+    <update id="update">
+
+        update bl_sys_user
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="header!=null and header!=''">
+                header = #{header},
+            </if>
+            <if test="signature!=null and signature!=''">
+                signature = #{signature},
+            </if>
+            <if test="comment!=null and comment!=''">
+                `comment` = #{comment},
+            </if>
+        </set>
+        where id = #{id}
+
+
+    </update>
+    <update id="updatePwd">
+        update bl_sys_user
+        <set>
+            <if test="newPwd!=null and newPwd != ''">
+                password = #{newPwd}
+            </if>
+        </set>
+
+        where id = #{id}
+
+    </update>
+
+    <select id="getByUsername" resultMap="BaseResultMap">
+        select id, name, header, signature, comment, username, password
+        from bl_sys_user
+        where username = #{username}
+    </select>
+    <select id="getAllById" resultMap="BaseResultMap">
+        select *
+        from bl_sys_user
+        where id = #{id}
+    </select>
+    <select id="getSysUser" resultMap="BaseResultMap">
+        select *
+        from bl_sys_user limit 1
+    </select>
+
+
+</mapper>

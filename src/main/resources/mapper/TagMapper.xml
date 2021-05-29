@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.TagMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.Tag">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
+    <insert id="saveBatch" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into bl_tag(name) values
+        <foreach collection="list" item="tag" separator=",">
+            (#{tag.name})
+        </foreach>
+    </insert>
+
+
+    <select id="getByName" resultMap="BaseResultMap">
+        select *
+        from bl_tag
+        where name like concat(#{name}, '%')
+    </select>
+
+
+    <!-- 通用查询结果列 -->
+
+
+</mapper>

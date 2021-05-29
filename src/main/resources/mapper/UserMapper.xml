@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.UserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.User">
+        <id column="user_id" property="userId"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="header" property="header"/>
+        <result column="nick_name" property="nickname"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+    <insert id="save">
+        insert into bl_user(username, password, name, sex, header, user_email)
+        values (#{username}, #{password}, #{name}, #{sex}, #{header}, #{userEmail})
+    </insert>
+    <update id="updatePwd">
+        update bl_user
+        set password = #{password}
+        where user_id = #{userId}
+    </update>
+    <update id="update">
+        update bl_user
+        <set>
+            <if test="username!=null and username != ''">
+                username = #{username},
+            </if>
+            <if test="sex!=null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="header!=null and header != ''">
+                header = #{header},
+            </if>
+            <if test="userEmail!=null and userEmail != ''">
+                user_email = #{userEmail},
+            </if>
+            <if test="nickname!=null and nickname != ''">
+                nickname = #{nickname}
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+    <select id="getUserByName" resultType="com.qzy.pojo.User">
+        select user_id,
+               username,
+               password,
+               name,
+               sex,
+               header,
+               nickname,
+               user_email
+        from bl_user
+        where username = #{username}
+          and deleted = 0
+    </select>
+    <select id="getNames" resultType="java.lang.String">
+        select name
+        from bl_user
+    </select>
+
+
+</mapper>

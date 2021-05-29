@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.BlogCollectionMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.BlogCollection">
+        <id column="id" property="id"/>
+        <result column="blog_id" property="blogId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+    <insert id="save">
+        insert into bl_blog_collection(blog_id, user_id)
+        VALUES (#{blogId}, #{userId})
+    </insert>
+    <select id="getCountByBlogIdAndUserId" resultType="java.lang.Integer">
+        select count(*)
+        from bl_blog_collection
+        where blog_id = #{blogId}
+          and user_id = #{userId}
+    </select>
+    <select id="getByPage" resultMap="BaseResultMap">
+        select id,
+               blog_id,
+               user_id
+        from bl_blog_collection
+        where user_id = #{userId}
+        limit #{page.index}, #{page.pageSize}
+    </select>
+    <select id="getCountByPage" resultType="java.lang.Integer">
+        select count(*)
+        from bl_blog_collection
+        where user_id = #{userId}
+    </select>
+
+</mapper>

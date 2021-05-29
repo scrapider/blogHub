@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzy.mapper.BlogMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qzy.pojo.Blog">
+        <id column="blog_id" property="blogId"/>
+        <result column="blog_title" property="blogTitle"/>
+        <result column="blog_image" property="blogImage"/>
+        <result column="blog_content" property="blogContent"/>
+        <result column="blog_goods" property="blogGoods"/>
+        <result column="blog_read" property="blogRead"/>
+        <result column="blog_collection" property="blogCollection"/>
+        <result column="blog_type" property="blogType"/>
+        <result column="blog_remark" property="blogRemark"/>
+        <result column="blog_comment" property="blogComment"/>
+        <result column="blog_source" property="blogSource"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+    <insert id="save">
+        insert into bl_blog (blog_id, blog_title, blog_image, blog_content, blog_type, blog_remark, blog_source)
+        values (#{blogId},
+                #{blogTitle},
+                #{blogImage},
+                #{blogContent},
+                #{blogType},
+                #{blogRemark},
+                #{blogSource})
+    </insert>
+    <update id="update">
+        update bl_blog
+        <set>
+            <if test="blogTitle!=null and blogTitle!=''">
+                blog_title = #{blogTitle},
+            </if>
+            <if test="blogImage!=null and blogImage!=''">
+                blog_image = #{blogImage},
+            </if>
+            <if test="blogContent!=null and blogContent!=''">
+                blog_content = #{blogContent},
+            </if>
+            <if test="blogRemark!=null and blogRemark!=''">
+                blog_remark = #{blogRemark},
+            </if>
+            <if test="blogGoods!=null">
+                blog_goods = #{blogGoods},
+            </if>
+            <if test="blogRead!=null">
+                blog_read = #{blogRead},
+            </if>
+            <if test="blogCollection!=null">
+                blog_collection = #{blogCollection},
+            </if>
+            <if test="blogType!=null">
+                blog_type = #{blogType},
+            </if>
+            <if test="blogComment!=null">
+                blog_comment = #{blogComment},
+            </if>
+        </set>
+        where blog_id = #{blogId}
+    </update>
+    <update id="delete">
+        update bl_blog
+        set deleted = 1
+        where blog_id = #{id}
+    </update>
+    <select id="getByName" resultMap="BaseResultMap">
+        select blog_id,
+        blog_title,
+        blog_image,
+        blog_goods,
+        blog_read,
+        blog_collection,
+        blog_remark,
+        blog_type,
+        blog_comment,
+        blog_source,
+        created_time,
+        update_time
+        from bl_blog
+        where deleted = 0
+        <if test="params.blogTitle!=null and params.blogTitle!=''">
+            and blog_title like concat('%',#{params.blogTitle},'%')
+        </if>
+        <if test="params.blogSource!=null and params.blogSource!=''">
+            and blog_source like concat('%',#{params.blogSource},'%')
+        </if>
+        <if test="params.blogType!=null">
+            and blog_type = #{params.blogType}
+        </if>
+        <if test="sortColumn!=null and sortColumn!=''">
+            order by ${sortColumn} ${sortMethod}
+        </if>
+        <if test="sortColumn==null or sortColumn==''">
+            order by created_time desc
+        </if>
+        limit #{index}, #{pageSize}
+
+
+    </select>
+    <select id="countByName" resultType="java.lang.Integer">
+        select count(*)
+        from bl_blog
+        where deleted = 0
+        <if test="params.blogTitle!=null and params.blogTitle!=''">
+            and blog_title like concat('%',#{params.blogTitle},'%')
+        </if>
+        <if test="params.blogSource!=null and params.blogSource!=''">
+            and blog_source like concat('%',#{params.blogSource},'%')
+        </if>
+        <if test="params.blogType!=null">
+            and blog_type = #{params.blogType}
+        </if>
+    </select>
+    <select id="getUpdate" resultMap="BaseResultMap">
+        select blog_id,
+               blog_title,
+               blog_image,
+               blog_content,
+               blog_type,
+               blog_remark
+        from bl_blog
+        where blog_id = #{id}
+    </select>
+    <select id="getInfo" resultMap="BaseResultMap">
+        select blog_id,
+               blog_title,
+               blog_image,
+               blog_content,
+               blog_goods,
+               blog_read,
+               blog_collection,
+               blog_type,
+               blog_remark,
+               blog_comment,
+               blog_source,
+               created_time,
+               update_time
+        from bl_blog
+        where blog_id = #{id}
+    </select>
+    <select id="getTypeCount" resultMap="com.qzy.mapper.SysTypeMapper.BaseResultMap">
+        select count(*) as type_blog_count, blog_type as type_id
+        from bl_blog
+        where deleted = 0
+        group by blog_type
+    </select>
+    <select id="getTime" resultMap="BaseResultMap">
+        select blog_id, blog_title, created_time
+        from bl_blog
+        where deleted = 0
+        order by created_time desc
+        limit #{index},20
+    </select>
+    <select id="getByIds" resultMap="BaseResultMap">
+        select blog_id,
+        blog_title,
+        blog_image,
+        blog_goods,
+        blog_read,
+        blog_collection,
+        blog_remark,
+        blog_type,
+        blog_comment,
+        blog_source,
+        created_time,
+        update_time
+        from bl_blog
+        where blog_id in (
+        <foreach collection="list" separator="," item="item">
+            #{item}
+        </foreach>
+        )
+    </select>
+    <!-- 通用查询结果列 -->
+
+
+</mapper>
